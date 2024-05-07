@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -12,6 +13,10 @@ public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
+    public final int screenX;
+    public final int screenY;
+    int hasKey = 0;
+    
 
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
@@ -20,12 +25,17 @@ public class Player extends Entity {
         screenX = gp.screenWidth/2 - (gp.tileSize/2); // on doit diviser enlever gp.tileSize/2 sinon ca commence a dessiner une case trop bas
         screenY = gp.screenHeight/2 - (gp.tileSize/2);// car la coordonner quon va donne cest pas le centre de limage mais en haut a gauche
         
+        //pour colision
+        solidArea = new Rectangle(8, 16, 32, 32);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        
+        //initialize
         setDefaultValues();
         getPlayerImage();
     }
     
-    public final int screenX;
-    public final int screenY;
+
 
     public void setDefaultValues(){
         worldX = gp.tileSize * 23;
@@ -51,23 +61,54 @@ public class Player extends Entity {
 
     public void update(){
     	
+    	// normalement on check les collisions apres etre passer dans le if dans haut puis ensuite on appel quune fois la fonctions
+        // qui check les collisions mais ca cancel les diagonal et le jeu est plus agreable avec
+        // alors je prefere regarder a chaque mouvement si on peut bouger mais au moins on peut en faire deux en meme temps
+    	
     	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
     		if(keyH.upPressed == true) {
                 direction = "up";
-                worldY -= speed;
+                collisionOn = false;
+                int objIndex = gp.checker.checkObject(this, true);
+                pickUpObject(objIndex);
+                gp.checker.checkTile(this);
+                if(collisionOn == false) {
+                	worldY -= speed;
+                }
             }
             if(keyH.downPressed == true) {
                 direction = "down";
-                worldY += speed;
+                collisionOn = false;
+                int objIndex = gp.checker.checkObject(this, true);
+                pickUpObject(objIndex);
+                gp.checker.checkTile(this);
+                if(collisionOn == false) {
+                	worldY += speed;
+                }
             }
             if(keyH.leftPressed == true) {
-                direction = "left";
-                worldX -= speed;
+                direction = "left";     
+                collisionOn = false;
+                int objIndex = gp.checker.checkObject(this, true);
+                pickUpObject(objIndex);
+                gp.checker.checkTile(this);
+                if(collisionOn == false) {
+                	worldX -= speed;
+                }
             }
             if(keyH.rightPressed == true) {
                 direction = "right";
-                worldX += speed;
+                collisionOn = false;
+                int objIndex = gp.checker.checkObject(this, true);
+                pickUpObject(objIndex);
+                gp.checker.checkTile(this);
+                if(collisionOn == false) {
+                	worldX += speed;
+                }
             }
+            
+            
+            
 
             spriteCounter++;
             if(spriteCounter > 10){
@@ -78,6 +119,26 @@ public class Player extends Entity {
                 }
                 spriteCounter = 0;
             }
+    	}
+    }
+    
+    public void pickUpObject(int in) {
+    	if(in != 999) {
+    		String objectName = gp.obj[in].name;
+    		switch(objectName) {
+    		case "Key":
+    			hasKey++;
+    			gp.obj[in] = null;
+    			System.out.println("Key:"+hasKey);
+    			break;
+    		case "Door":
+    			if(hasKey>0) {
+    				gp.obj[in] = null;
+    				hasKey--;
+    			}
+				System.out.println("Key:"+hasKey);
+    			break;
+    		}
     	}
     }
     
