@@ -65,7 +65,7 @@ public class Player extends Entity {
         // qui check les collisions mais ca cancel les diagonal et le jeu est plus agreable avec
         // alors je prefere regarder a chaque mouvement si on peut bouger mais au moins on peut en faire deux en meme temps
     	
-    	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
+    	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true || keyH.enterPressed == true) {
     		if(keyH.upPressed == true) {
                 direction = "up";
                 checkAllCollision();
@@ -94,6 +94,9 @@ public class Player extends Entity {
                 	worldX += speed;
                 }
             }
+            if(keyH.enterPressed == true) {
+                checkAllCollision();
+            }
             
             spriteCounter++;
             if(spriteCounter > 10){
@@ -104,6 +107,7 @@ public class Player extends Entity {
                 }
                 spriteCounter = 0;
             }
+
     	}
     }
     public void checkAllCollision() {
@@ -123,8 +127,12 @@ public class Player extends Entity {
     
     public void interactNPC(int index) {
     	if(index != 999) {
-    		System.out.println("You are hitting an npc!");
+    		if(gp.keyH.enterPressed) {
+    			gp.gameState = gp.dialogueState;
+        		gp.npc[index].speak();
+    		}
     	}
+    	gp.keyH.enterPressed = false;
     }
     
     public void draw(Graphics2D g2){

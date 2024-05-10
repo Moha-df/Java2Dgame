@@ -13,6 +13,7 @@ public class NPC_OldMen extends Entity{
 		speed = 1;
 		
 		getImage();
+		setDialogue();
 	}
 	
 	public void getImage(){
@@ -25,6 +26,13 @@ public class NPC_OldMen extends Entity{
         right1 = setup("/npc/oldman_right_1");
         right2 = setup("/npc/oldman_right_2");
     }
+	
+	public void setDialogue() {
+		dialogues[0] = "Hello, son of the mage";
+		dialogues[1] = "Your destiny is to collect \nall the magic power";
+		dialogues[2] = "For that you need to \ndefeat all the demon";
+		dialogues[3] = "But they will not give \nthem to you alive !!";
+	}
 	
 	public void setAction() {
 		
@@ -49,8 +57,10 @@ public class NPC_OldMen extends Entity{
 			
 			actionLockCounter = 0;
 		}
-		
-		
+	}
+	
+	public void speak() {
+		super.speak();
 	}
     
     
