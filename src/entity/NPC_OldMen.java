@@ -29,9 +29,9 @@ public class NPC_OldMen extends Entity{
 	
 	public void setDialogue() {
 		dialogues[0] = "Hello, son of the mage";
-		dialogues[1] = "Your destiny is to collect \nall the magic power";
-		dialogues[2] = "For that you need to \ndefeat all the demon";
-		dialogues[3] = "But they will not give \nthem to you alive !!";
+		dialogues[1] = "Your destiny is to collect all \nthe magic power";
+		dialogues[2] = "For that you need to defeat \nall the demon";
+		dialogues[3] = "But they will not give them \nto you alive !!";
 	}
 	
 	public void setAction() {

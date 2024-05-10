@@ -43,8 +43,10 @@ public class Player extends Entity {
     public void setDefaultValues(){
         worldX = gp.tileSize * 23;
         worldY = gp.tileSize * 21;
-        speed = 4;
+        speed = 2;
         direction = "down";
+        maxLife = 6;
+        life = 6;
     }
 
     public void getPlayerImage(){
@@ -60,7 +62,6 @@ public class Player extends Entity {
     
     
     public void update(){
-    	
     	// normalement on check les collisions apres etre passer dans le if dans haut puis ensuite on appel quune fois la fonctions
         // qui check les collisions mais ca cancel les diagonal et le jeu est plus agreable avec
         // alors je prefere regarder a chaque mouvement si on peut bouger mais au moins on peut en faire deux en meme temps
@@ -73,7 +74,7 @@ public class Player extends Entity {
                 	worldY -= speed;
                 }
             }
-            if(keyH.downPressed == true) {
+    		if(keyH.downPressed == true) {
                 direction = "down";
                 checkAllCollision();
                 if(collisionOn == false) {
@@ -94,6 +95,8 @@ public class Player extends Entity {
                 	worldX += speed;
                 }
             }
+         
+            
             if(keyH.enterPressed == true) {
                 checkAllCollision();
             }
