@@ -3,23 +3,26 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
+
+
 import gamePackage.GamePanel;
 import gamePackage.KeyHandler;
 
+
 public class Player extends Entity {
 
-    GamePanel gp;
+
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
-    public int hasKey = 0;
+
     
 
     public Player(GamePanel gp, KeyHandler keyH){
-        this.gp = gp;
+    	
+    	super(gp);
+
         this.keyH = keyH;
         
         screenX = gp.screenWidth/2 - (gp.tileSize/2); // on doit diviser enlever gp.tileSize/2 sinon ca commence a dessiner une case trop bas
@@ -45,20 +48,17 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage(){
-        try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_2.png"));
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        up1 = setup("/player/boy_up_1");
+        up2 = setup("/player/boy_up_2");
+        down1 = setup("/player/boy_down_1");
+        down2 = setup("/player/boy_down_2");
+        left1 = setup("/player/boy_left_1");
+        left2 = setup("/player/boy_left_2");
+        right1 = setup("/player/boy_right_1");
+        right2 = setup("/player/boy_right_2");
     }
-
+    
+    
     public void update(){
     	
     	// normalement on check les collisions apres etre passer dans le if dans haut puis ensuite on appel quune fois la fonctions
@@ -68,48 +68,33 @@ public class Player extends Entity {
     	if(keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
     		if(keyH.upPressed == true) {
                 direction = "up";
-                collisionOn = false;
-                int objIndex = gp.checker.checkObject(this, true);
-                pickUpObject(objIndex);
-                gp.checker.checkTile(this);
+                checkAllCollision();
                 if(collisionOn == false) {
                 	worldY -= speed;
                 }
             }
             if(keyH.downPressed == true) {
                 direction = "down";
-                collisionOn = false;
-                int objIndex = gp.checker.checkObject(this, true);
-                pickUpObject(objIndex);
-                gp.checker.checkTile(this);
+                checkAllCollision();
                 if(collisionOn == false) {
                 	worldY += speed;
                 }
             }
             if(keyH.leftPressed == true) {
                 direction = "left";     
-                collisionOn = false;
-                int objIndex = gp.checker.checkObject(this, true);
-                pickUpObject(objIndex);
-                gp.checker.checkTile(this);
+                checkAllCollision();
                 if(collisionOn == false) {
                 	worldX -= speed;
                 }
             }
             if(keyH.rightPressed == true) {
                 direction = "right";
-                collisionOn = false;
-                int objIndex = gp.checker.checkObject(this, true);
-                pickUpObject(objIndex);
-                gp.checker.checkTile(this);
+                checkAllCollision();
                 if(collisionOn == false) {
                 	worldX += speed;
                 }
             }
             
-            
-            
-
             spriteCounter++;
             if(spriteCounter > 10){
                 if(spriteNum == 1){
@@ -121,41 +106,24 @@ public class Player extends Entity {
             }
     	}
     }
+    public void checkAllCollision() {
+        collisionOn = false;
+        int objIndex = gp.checker.checkObject(this, true);
+        pickUpObject(objIndex);
+        int npcIndex = gp.checker.checkEntity(this, gp.npc);
+        interactNPC(npcIndex);
+        gp.checker.checkTile(this);
+    }
     
     public void pickUpObject(int in) {
     	if(in != 999) {
-    		String objectName = gp.obj[in].name;
-    		switch(objectName) {
-    		case "Key":
-    			gp.playSE(1);
-    			hasKey++;
-    			gp.obj[in] = null;
-    			gp.ui.showMessage("You got a key!");
-    			break;
-    		case "Door":
-    			if(hasKey>0) {
-    				gp.playSE(3);
-    				gp.obj[in] = null;
-    				hasKey--;
-    				gp.ui.showMessage("You opened the dooor!");
-    			}
-    			else {
-    				gp.ui.showMessage("You need a key!");
-    			}
-    			break;
-    		case "Boots":
-    			gp.playSE(2);
-    			speed += 2;
-    			gp.obj[in] = null;
-    			gp.ui.showMessage("Speed up!");
-    			break;
-    		case "Chest":
-    			gp.ui.gameFinished = true;
-    			gp.stopMusic();
-    			gp.playSE(4);
-    			gp.obj[in] = null;
-    			break;
-    		}
+    		
+    	}
+    }
+    
+    public void interactNPC(int index) {
+    	if(index != 999) {
+    		System.out.println("You are hitting an npc!");
     	}
     }
     
@@ -195,6 +163,6 @@ public class Player extends Entity {
                 }
                 break;
         }
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        g2.drawImage(image, screenX, screenY, null);
     }
 }

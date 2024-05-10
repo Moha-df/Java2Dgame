@@ -1,6 +1,7 @@
 package tile;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,51 +10,52 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 import gamePackage.GamePanel;
+import gamePackage.ToolBox;
 
 public class TileManager {
 	
 	GamePanel gp;
 	public Tile[] tile;
 	public int mapTileNum[][];
+	public int mapTileNum2[][];
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
-		tile = new Tile[10];
+		tile = new Tile[50];
 		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		//mapTileNum2 = new int[gp.maxWorldCol][gp.maxWorldRow];
 		getTileImage();
-		loadMap("/maps/map01.txt");
+		loadMap("/maps/map01.txt", mapTileNum);
+		//loadMap("/maps/map02.txt", mapTileNum2);
 	}
 	
 	public void getTileImage() {
-		try {
-			
-			tile[0] = new Tile();
-			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/grass01.png"));
-			
-			tile[1] = new Tile();
-			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
-			tile[1].collision = true;
-			
-			tile[2] = new Tile();
-			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water00.png"));
-			tile[2].collision = true;
-			
-			tile[3] = new Tile();
-			tile[3].image = ImageIO.read(getClass().getResourceAsStream("/tiles/earth.png"));
-			
-			tile[4] = new Tile();
-			tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree2.png"));
-			tile[4].collision = true;
-			
-			tile[5] = new Tile();
-			tile[5].image = ImageIO.read(getClass().getResourceAsStream("/tiles/sand.png"));
-			
-		}catch(IOException e){
+		for(int i =0; i<10; i++) {
+			setup(i, "00"+i , false);
+		}
+		for(int i=10; i<42; i++) {
+			setup(i, "0"+i , false);
+		}
+		tile[16].collision = true;
+		for(int i=18; i<33; i++) {
+			tile[i].collision = true;
+		}
+		tile[35].collision = true;
+	}
+	
+	public void setup(int index, String imageName, boolean collision) {
+		ToolBox uTool = new ToolBox();
+		try { 
+			tile[index] = new Tile();
+			tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/"+ imageName +".png"));
+			tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+			tile[index].collision = collision;
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void loadMap(String filePath) {
+	public void loadMap(String filePath, int mapTileNum[][]) {
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -81,11 +83,7 @@ public class TileManager {
 		}
 	}
 	
-	public void draw(Graphics2D g2) {
-		g2.drawImage(tile[0].image, 0, 0, gp.tileSize, gp.tileSize, null);
-		g2.drawImage(tile[1].image, 48, 0, gp.tileSize, gp.tileSize, null);
-		g2.drawImage(tile[2].image, 96, 0, gp.tileSize, gp.tileSize, null);
-		
+	public void draw(Graphics2D g2 , int mapTileNum[][]) {	
 		int worldCol = 0;
 		int worldRow = 0;
 		
@@ -104,12 +102,11 @@ public class TileManager {
 			// on entoure la fonction qui dessins les tuiles de if pour quen realiter on ne dessins pas toute les tuiles de lecran meme si la boucle les parcours toutes
 			if(worldX > gp.player.worldX - gp.player.screenX - gp.tileSize && worldX < gp.player.worldX + gp.player.screenX + gp.tileSize 
 			&& worldY > gp.player.worldY - gp.player.screenY - gp.tileSize && worldY < gp.player.worldY + gp.player.screenY + gp.tileSize) {
-				g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null); // dis de maniere plus simple cest jsute la map qui se deplace enfaite
+				g2.drawImage(tile[tileNum].image, screenX, screenY, null); // dis de maniere plus simple cest jsute la map qui se deplace enfaite
 			}
 			 
 			worldCol++;
 
-			
 			if(worldCol == gp.maxWorldCol) {
 				worldCol = 0;
 				worldRow++;
