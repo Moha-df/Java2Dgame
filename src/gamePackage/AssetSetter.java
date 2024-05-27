@@ -1,10 +1,6 @@
 package gamePackage;
 
 import entity.NPC_OldMen;
-import object.OBJ_boots;
-import object.OBJ_chest;
-import object.OBJ_door;
-import object.OBJ_key;
 
 public class AssetSetter {
 	GamePanel gp;

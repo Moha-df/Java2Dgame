@@ -22,7 +22,7 @@ public class CollisionCheck {
 		int entityTopRow = entityTopWorldY/gp.tileSize;
 		int entityBottomRow = entityBottomWorldY/gp.tileSize;
 		
-		int tileNum1, tileNum2, tileNum3, tileNum4;
+		int tileNum1, tileNum2;// tileNum3, tileNum4;
 		
 		switch(entity.direction) {
 			case "up": // ici on verifie la case au dessus a gauche et au dessus a droite etant donner quon avance en avant

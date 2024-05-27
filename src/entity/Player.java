@@ -96,10 +96,11 @@ public class Player extends Entity {
                 }
             }
          
-            
             if(keyH.enterPressed == true) {
                 checkAllCollision();
             }
+            
+            
             
             spriteCounter++;
             if(spriteCounter > 10){
@@ -120,6 +121,8 @@ public class Player extends Entity {
         int npcIndex = gp.checker.checkEntity(this, gp.npc);
         interactNPC(npcIndex);
         gp.checker.checkTile(this);
+        gp.eHandler.chechEvent();
+        gp.keyH.enterPressed = false;
     }
     
     public void pickUpObject(int in) {
@@ -135,7 +138,6 @@ public class Player extends Entity {
         		gp.npc[index].speak();
     		}
     	}
-    	gp.keyH.enterPressed = false;
     }
     
     public void draw(Graphics2D g2){
