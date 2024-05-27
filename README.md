@@ -1,18 +1,17 @@
-## Getting Started
+## **De Franceschi Mohamed && Daniel Verguet** 
+## *Projet : Jeu d’exploration de salles*
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+  Dans le cadre du projet de POO2 nous avons donc réaliser du mieux que nous le pouvions le projet demandés en rapportant également nos différents touche de modifications et cela en utilisant le langage vue en classe, java.
 
-## Folder Structure
+ - Ayant demandé pour pouvoir modifier le projet par mail et ayant obtenue cette réponse
 
-The workspace contains two folders by default, where:
+> vous pouvez faire du temps réel et utiliser du scrolling. Cela peut
+> être fait assez facilement avec certain moteur ou certaines
+> librairies. C'est juste que cela est plus dificile si on part des
+> librairies de base. Je précise que je considère que le temps réel et
+> le scrolling sont des fonctionalités suplémentaires (donc des points
+> sont atribués dans la grille de notation pour ces fonctionalités).
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+Nous avons donc pris la décisions de faire un jeu un peu différent que simplement un jeu sans scrolling, mais plutôt faire un jeu qui ressemble plus a un jeu comme les anciens Zelda
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Il y a un dans le zip rendu un fichier `.pdf` qui contient notre rapport avec également le graphe `UML` demandé, et également un fichier  `.jar` qui vous permettras directement de lancer le jeu.
