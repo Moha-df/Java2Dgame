@@ -11,6 +11,12 @@ public class NPC_OldMen extends Entity{
 		super(gp);
 		direction = "down";
 		speed = 1;
+		solidArea.x = 4; // pas sur de la taille de la box collision mais bon
+		solidArea.y = 10;
+		solidArea.width = 40;
+		solidArea.height = 38;
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
 		
 		getImage();
 		setDialogue();

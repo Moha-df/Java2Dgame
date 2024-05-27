@@ -19,7 +19,7 @@ public class Entity  {
     public int speed;
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-    public String direction;
+    public String direction = "down";
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
@@ -29,9 +29,18 @@ public class Entity  {
     public boolean collisionOn = false;
     public int actionLockCounter = 0;
     
+    public boolean invicible = false;
+    public int invicibleCounter = 0;
+    
     String dialogues[] = new String[20];
     int dialogueIndex = 0;
     
+	public BufferedImage image, image2, image3;
+	public String name;
+	public boolean collision = false;
+    
+	public int type; // 0 = player; 1 = npc; 2 = mob; pr le moment seulement le 2 est utile.
+	
     public int maxLife;
     public int life;
     
@@ -67,7 +76,17 @@ public class Entity  {
     	collisionOn = false;
     	gp.checker.checkTile(this);
     	gp.checker.checkObject(this, false);
-    	gp.checker.checkPlayer(this);
+    	gp.checker.checkEntity(this, gp.npc);
+    	gp.checker.checkEntity(this, gp.mob);
+    	boolean contactPlayer = gp.checker.checkPlayer(this);
+    	
+    	if(this.type == 2 && contactPlayer == true) {
+    		if(gp.player.invicible == false) {
+        		gp.player.life -= 1;
+        		gp.player.invicible = true;
+    		}
+
+    	}
     	
     	if(collisionOn == false) {
     		switch(direction) {

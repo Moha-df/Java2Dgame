@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -16,7 +17,8 @@ public class Player extends Entity {
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
-
+	int halfOpacityCounter = 0;
+	boolean halfOpacity = false;
     
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -113,7 +115,16 @@ public class Player extends Entity {
             }
 
     	}
+    	
+    	if(invicible == true) {
+    		invicibleCounter++;
+    		if(invicibleCounter > 60) {
+    			invicible = false;
+    			invicibleCounter = 0;
+    		}
+    	}
     }
+    
     public void checkAllCollision() {
         collisionOn = false;
         int objIndex = gp.checker.checkObject(this, true);
@@ -121,6 +132,8 @@ public class Player extends Entity {
         int npcIndex = gp.checker.checkEntity(this, gp.npc);
         interactNPC(npcIndex);
         gp.checker.checkTile(this);
+        int monsterIndex = gp.checker.checkEntity(this, gp.mob);
+        contactMonster(monsterIndex);
         gp.eHandler.chechEvent();
         gp.keyH.enterPressed = false;
     }
@@ -139,6 +152,16 @@ public class Player extends Entity {
     		}
     	}
     }
+    
+    public void contactMonster(int index) {
+    	if(index != 999) {
+    		if(invicible == false) {
+    			life -= 1;
+    			invicible = true;
+    		}
+    	}
+    }
+    
     
     public void draw(Graphics2D g2){
         BufferedImage image = null;
@@ -176,6 +199,25 @@ public class Player extends Entity {
                 }
                 break;
         }
+        if(invicible == true && halfOpacity == false) {
+        	halfOpacityCounter++;
+        	if(halfOpacityCounter == 10) {
+        		halfOpacity = true;
+        		halfOpacityCounter = 0;
+        	}
+        }
+        if(invicible == true && halfOpacity == true) {
+        	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        	halfOpacityCounter++;
+        	if(halfOpacityCounter == 10) {
+        		halfOpacity = false;
+        		halfOpacityCounter = 0;
+        	}
+        }
+        
         g2.drawImage(image, screenX, screenY, null);
+        
+        //reset opacity
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 }

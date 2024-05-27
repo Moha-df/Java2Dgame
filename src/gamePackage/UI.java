@@ -1,6 +1,7 @@
 package gamePackage;
 
 import java.awt.BasicStroke;
+import entity.Entity;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import object.OBJ_heart;
-import object.SuperObject;
 
 public class UI {
 	GamePanel gp;
@@ -38,7 +38,7 @@ public class UI {
 			e.printStackTrace();
 		}
 		
-		SuperObject heart = new OBJ_heart(gp);
+		Entity heart = new OBJ_heart(gp);
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
