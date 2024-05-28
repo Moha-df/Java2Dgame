@@ -15,16 +15,16 @@ public class TileManager {
 	
 	GamePanel gp;
 	public Tile[] tile;
-	public int mapTileNum[][];
-	public int mapTileNum2[][];
+	public int mapTileNum[][][];
 	
 	public TileManager(GamePanel gp) {
 		this.gp = gp;
 		tile = new Tile[50];
-		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
 		//mapTileNum2 = new int[gp.maxWorldCol][gp.maxWorldRow];
 		getTileImage();
-		loadMap("/maps/map01.txt", mapTileNum);
+		loadMap("/maps/map01.txt", 0);
+		loadMap("/maps/map02.txt", 1);
 		//loadMap("/maps/map02.txt", mapTileNum2);
 	}
 	
@@ -54,7 +54,7 @@ public class TileManager {
 		}
 	}
 	
-	public void loadMap(String filePath, int mapTileNum[][]) {
+	public void loadMap(String filePath, int map) {
 		try {
 			InputStream is = getClass().getResourceAsStream(filePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -67,7 +67,7 @@ public class TileManager {
 				while(col < gp.maxWorldCol) {
 					String number[] = line.split(" "); // split comme vu au S3 pour separer chaque nombre de la map des quil y a espace
 					int num = Integer.parseInt(number[col]); // et la on transfer les "0" en int 0
-					mapTileNum[col][row] = num;
+					mapTileNum[map][col][row] = num;
 					col++;
 				}
 				if(col == gp.maxWorldCol) {
@@ -82,14 +82,14 @@ public class TileManager {
 		}
 	}
 	
-	public void draw(Graphics2D g2 , int mapTileNum[][]) {	
+	public void draw(Graphics2D g2) {	
 		int worldCol = 0;
 		int worldRow = 0;
 		
 		
 		while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
 			
-			int tileNum = mapTileNum[worldCol][worldRow]; // En gros pour explique comment je dessine les tuiles dans le background
+			int tileNum = mapTileNum[gp.numMap][worldCol][worldRow]; // En gros pour explique comment je dessine les tuiles dans le background
 														  // faut se dire quon disossie la position de la camera a la position du monde
 														  // et la camera se deplace au dessus du monde avec le joueur tout le temps afficher au millieu
 			

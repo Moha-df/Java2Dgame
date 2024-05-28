@@ -18,7 +18,7 @@ public class KeyHandler implements KeyListener {
 
         int code = e.getKeyCode();
         
-        if(gp.gameState == gp.titleState || gp.gameState == gp.gameOverState) {
+        if(gp.gameState == gp.titleState) {
         	if(code == KeyEvent.VK_Z) {
         		gp.ui.commandNum--;
         		if(gp.ui.commandNum < 0) {
@@ -44,6 +44,11 @@ public class KeyHandler implements KeyListener {
 	     	 		System.exit(0);
 	     	 	}
             }
+        }
+        else if(gp.gameState == gp.gameOverState) {
+        	if(code == KeyEvent.VK_ENTER) {
+        		System.exit(0);
+        	}
         }
         
         else if(gp.gameState == gp.playState) {

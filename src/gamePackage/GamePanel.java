@@ -27,8 +27,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenHeight = tileSize * maxScreenRow; // soit il y a 768x576 pixels pour le jeu
     
     //Taille du monde
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow =50;
+    public final int maxWorldCol = 28;
+    public final int maxWorldRow =25;
 
     // Set FPS
     int FPS = 60;
@@ -45,12 +45,15 @@ public class GamePanel extends JPanel implements Runnable {
     Sound music = new Sound();
     Sound se = new Sound();
     
-    //Player et object
+    //Player , object, numMap
+    public final int maxMap = 20;
+    public int numMap = 0;
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10]; 
-    public Entity npc[] = new Entity[10];
-    public Entity mob[] = new Entity[20];
+    public Entity obj[][] = new Entity[maxMap][10]; 
+    public Entity npc[][] = new Entity[maxMap][10];
+    public Entity mob[][] = new Entity[maxMap][20];
     ArrayList<Entity> entityList = new ArrayList<>(); // liste qui va contenir toute les entités triés dans l'ordre de chevauchement
+   
     
     // game state
     public int gameState;
@@ -119,18 +122,18 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
     	if(gameState == playState) {
     		player.update();
-    		for(int i = 0; i < npc.length; i++) {
-    			if(npc[i] != null) {
-    				npc[i].update();
+    		for(int i = 0; i < npc[1].length; i++) {
+    			if(npc[numMap][i] != null) {
+    				npc[numMap][i].update();
     			}
     		}
-    		for(int i = 0; i<mob.length; i++) {
-    			if(mob[i] != null) {
-    				if(mob[i].alive == true && mob[i].dying == false) {
-    					mob[i].update();
+    		for(int i = 0; i<mob[1].length; i++) {
+    			if(mob[numMap][i] != null) {
+    				if(mob[numMap][i].alive == true && mob[numMap][i].dying == false) {
+    					mob[numMap][i].update();
     				}
-    				if(mob[i].alive == false) {
-    					mob[i] = null;
+    				if(mob[numMap][i].alive == false) {
+    					mob[numMap][i] = null;
     				}
     			}
     		}
@@ -159,29 +162,29 @@ public class GamePanel extends JPanel implements Runnable {
         }
         else {
         	//Tile
-            tileM.draw(g2, tileM.mapTileNum);
+            //tileM.draw(g2, tileM.mapTileNum);
+        	tileM.draw(g2);
             
             // Ajout de toute les entités dans la liste
             entityList.add(player);
             
-            for(int i = 0; i < npc.length; i++) {
-            	if(npc[i] != null) {
-            		entityList.add(npc[i]);
+            for(int i = 0; i < npc[1].length; i++) {
+            	if(npc[numMap][i] != null) {
+            		entityList.add(npc[numMap][i]);
             	}
             }
-            for(int i = 0; i < obj.length; i++) {
-            	if(obj[i] != null) {
-            		entityList.add(obj[i]);
+            for(int i = 0; i < obj[1].length; i++) {
+            	if(obj[numMap][i] != null) {
+            		entityList.add(obj[numMap][i]);
             	}
             }
-            for(int i = 0; i<mob.length; i++) {
-    			if(mob[i] != null) {
-    				entityList.add(mob[i]);
+            for(int i = 0; i<mob[1].length; i++) {
+    			if(mob[numMap][i] != null) {
+    				entityList.add(mob[numMap][i]);
     			}
     		}
             // Sort
             Collections.sort(entityList, new Comparator<Entity>()  { // on trie la liste avec la classe comparator par rapport a la position Y
-
 				@Override
 				public int compare(Entity e1, Entity e2) {
 					int result = Integer.compare(e1.worldY, e2.worldY);

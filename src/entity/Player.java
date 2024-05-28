@@ -17,6 +17,7 @@ public class Player extends Entity {
     KeyHandler keyH;
     public final int screenX;
     public final int screenY;
+    public int hasKey = 0;
 
     
 
@@ -46,8 +47,8 @@ public class Player extends Entity {
 
 
     public void setDefaultValues(){
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 21;
+        worldX = gp.tileSize * 9;
+        worldY = gp.tileSize * 16;
         speed = 2;
         direction = "down";
         maxLife = 6;
@@ -199,7 +200,24 @@ public class Player extends Entity {
     
     public void pickUpObject(int in) {
     	if(in != 999) {
-    		
+    		String ojbectName = gp.obj[gp.numMap][in].name;
+    		switch(ojbectName) {
+	    		case"Key":
+	    			gp.obj[gp.numMap][in] = null;
+	    			hasKey++;
+	    			gp.playSE(1);
+	    			gp.ui.showMessage("You got a key !");
+	    			break;
+	    		case"Door":
+	    			if(hasKey>0) {
+	    				gp.obj[gp.numMap][in] = null;
+	    				gp.playSE(3);
+	    				hasKey--;
+	    			}if(hasKey<=0) {
+	    				gp.ui.showMessage("You need a key !");
+	    			}
+	    			break;
+    		}
     	}
     }
     
@@ -208,7 +226,7 @@ public class Player extends Entity {
     	if(gp.keyH.enterPressed == true) {
     		if(index != 999) {
     			gp.gameState = gp.dialogueState;
-        		gp.npc[index].speak();
+        		gp.npc[gp.numMap][index].speak();
         	}
         	else {
         		gp.playSE(7);
@@ -231,14 +249,15 @@ public class Player extends Entity {
     
     public void damageMob(int index) {
     	if(index != 999) {
-    		if(gp.mob[index].invicible == false) {
+    		if(gp.mob[gp.numMap][index].invicible == false) {
     			gp.playSE(5);
-    			gp.mob[index].life -= 1;
-    			gp.mob[index].invicible = true;
-    			gp.mob[index].damageReaction();
+    			gp.mob[gp.numMap][index].life -= 1;
+    			gp.mob[gp.numMap][index].invicible = true;
+    			gp.mob[gp.numMap][index].damageReaction();
     			
-    			if(gp.mob[index].life <= 0) {
-    				gp.mob[index].dying = true;
+    			if(gp.mob[gp.numMap][index].life <= 0) {
+    				gp.ui.showMessage("You've killed a mob !");
+    				gp.mob[gp.numMap][index].dying = true;
     			}
     		}
     		

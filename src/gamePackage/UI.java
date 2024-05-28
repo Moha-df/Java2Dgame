@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import object.OBJ_heart;
+import object.OBJ_key;
 
 public class UI {
 	GamePanel gp;
 	Graphics2D g2;
-	Font maruMonica;
-	BufferedImage heart_full, heart_half, heart_blank;
+	Font maruMonica, arial_40;
+	BufferedImage heart_full, heart_half, heart_blank, keyImg;
 	public boolean messageOn = false;
 	public String message = "";
 	int messageCounter = 0;
@@ -29,6 +30,9 @@ public class UI {
 	
 	public UI(GamePanel gp) {
 		this.gp = gp;
+		
+		arial_40 = new Font("Arial", Font.PLAIN, 40);
+		
 		try {
 			InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
 			maruMonica = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -42,6 +46,8 @@ public class UI {
 		heart_full = heart.image;
 		heart_half = heart.image2;
 		heart_blank = heart.image3;
+		Entity key = new OBJ_key(gp);
+		keyImg = key.down1;
 	}
 	public void showMessage(String text) {
 		message = text;
@@ -62,17 +68,28 @@ public class UI {
 		
 		if(gp.gameState == gp.playState) {
 			drawPlayerLife();
+			drawNumberOfKey();
 		}
 		if(gp.gameState == gp.pauseState) {
 			drawPlayerLife();
+			drawNumberOfKey();
 			drawPauseScreen();
 		}
 		if(gp.gameState == gp.dialogueState) {
 			drawPlayerLife();
+			drawNumberOfKey();
 			drawDialogueScreen();
 		}
 		if(gp.gameState == gp.gameOverState) {
 			drawOverScreen();
+		}
+		if(messageOn == true) {
+			g2.drawString(message, gp.tileSize/2, gp.tileSize*5);
+			messageCounter++;
+			if(messageCounter > 120) {
+				messageCounter = 0;
+				messageOn = false;
+			}
 		}
 	}
 	
@@ -99,6 +116,15 @@ public class UI {
 			i++;
 			x += gp.tileSize;
 		}
+		
+	}
+	
+	public void drawNumberOfKey() {
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 28F));
+		String text = "x " + gp.player.hasKey;
+		g2.drawString(text, 72, 132);
+		g2.drawImage(keyImg, gp.tileSize/2, gp.tileSize*2, gp.tileSize, gp.tileSize, null);
+		
 		
 	}
 	
@@ -145,9 +171,23 @@ public class UI {
 		if(commandNum == 2) {
 			g2.drawString(">", x-gp.tileSize, y);
 		}
+		
+		text = "Tips : press enter to attack or interract";
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 25F));
+		x = getCenteredText(text);
+		y += gp.tileSize;
+		g2.drawString(text, x, y);
+		
+		text = "& Moove with zqsd";
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 25F));
+		x = getCenteredText(text);
+		y += 24;
+		g2.drawString(text, x, y);
 	}
 	
 	public void drawOverScreen() {
+		gp.stopMusic();
+		
 		g2.setColor(new Color(152, 17, 17));
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 		
@@ -162,7 +202,8 @@ public class UI {
 		
 		x = gp.screenWidth/2 - gp.tileSize;
 		y += gp.tileSize;
-		g2.drawImage(gp.obj[0].down1, x, y, gp.tileSize*2, gp.tileSize*2, null);
+		Entity skull = new Entity(gp);
+		g2.drawImage(skull.setup("/object/skull", gp.tileSize, gp.tileSize), x, y, gp.tileSize*2, gp.tileSize*2, null);
 		
 		
 		text = "QUIT";
