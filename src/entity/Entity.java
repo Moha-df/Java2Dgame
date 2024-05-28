@@ -1,5 +1,8 @@
 package entity;
 
+
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -19,18 +22,28 @@ public class Entity  {
     public int speed;
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+    public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
     public String direction = "down";
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
     
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
     public int actionLockCounter = 0;
     
     public boolean invicible = false;
     public int invicibleCounter = 0;
+    
+    boolean attacking = false;
+    public boolean alive = true;
+    public boolean dying = false;
+    boolean hpBarOn = false;
+    
+    int hpBarCounter = 0;
+    int dyingCounter = 0;
     
     String dialogues[] = new String[20];
     int dialogueIndex = 0;
@@ -44,11 +57,15 @@ public class Entity  {
     public int maxLife;
     public int life;
     
+	int halfOpacityCounter = 0;
+	boolean halfOpacity = false;
+    
     public Entity(GamePanel gp) {
     	this.gp = gp;
     }
     
     public void setAction(){}
+    public void damageReaction() {}
     public void speak() {
     	if(dialogues[dialogueIndex] == null) {
 			dialogueIndex = 0;
@@ -82,6 +99,7 @@ public class Entity  {
     	
     	if(this.type == 2 && contactPlayer == true) {
     		if(gp.player.invicible == false) {
+    			gp.playSE(6);
         		gp.player.life -= 1;
         		gp.player.invicible = true;
     		}
@@ -105,6 +123,14 @@ public class Entity  {
             }
             spriteCounter = 0;
         }
+        
+    	if(invicible == true) {
+    		invicibleCounter++;
+    		if(invicibleCounter > 60) {
+    			invicible = false;
+    			invicibleCounter = 0;
+    		}
+    	}
     }
     
     public void draw(Graphics2D g2) {
@@ -118,48 +144,102 @@ public class Entity  {
 			
 			switch(direction){
             case "up":
-                if(spriteNum == 1){
-                    image = up1;
-                }
-                if(spriteNum == 2){
-                    image = up2;
-                }
+                if(spriteNum == 1){ image = up1; }
+                if(spriteNum == 2){ image = up2; }
                 break;
             case "down":
-                if(spriteNum == 1){
-                    image = down1;
-                }
-                if(spriteNum == 2){
-                    image = down2;
-                }
+                if(spriteNum == 1){ image = down1; }
+                if(spriteNum == 2){ image = down2; }
                 break;
             case "left":
-                if(spriteNum == 1){
-                    image = left1;
-                }
-                if(spriteNum == 2){
-                    image = left2;
-                }
+                if(spriteNum == 1){ image = left1; }
+                if(spriteNum == 2){ image = left2; }
                 break;
             case "right":
-                if(spriteNum == 1){
-                    image = right1;
-                }
-                if(spriteNum == 2){
-                    image = right2;
-                }
+                if(spriteNum == 1){ image = right1; }
+                if(spriteNum == 2){ image = right2; }
                 break;
 			}
+			
+			//HP bar
+			if(type == 2 && hpBarOn == true) {
+				double oneScale = (double)gp.tileSize/maxLife;
+				double hpBarValue = oneScale*life;
+				
+				g2.setColor(new Color(35, 35, 35));
+				g2.fillRect(screenX-1, screenY - 16, gp.tileSize+2, 12);
+				
+				g2.setColor(new Color(255,0,30));
+				g2.fillRect(screenX, screenY - 15, (int)hpBarValue, 10);
+				
+				hpBarCounter++;
+				
+				if(hpBarCounter > 600) {
+					hpBarCounter = 0;
+					hpBarOn = false;
+				}
+			}
+			
+			
+			if(invicible == true && halfOpacity == false) {
+				hpBarOn = true;
+				hpBarCounter = 0;
+	        	halfOpacityCounter++;
+	        	if(halfOpacityCounter == 10) {
+	        		halfOpacity = true;
+	        		halfOpacityCounter = 0;
+	        	}
+	        }
+	        if(invicible == true && halfOpacity == true) {
+	        	hpBarCounter = 0;
+	        	changeAlpha(g2, 0.4f);
+	        	halfOpacityCounter++;
+	        	if(halfOpacityCounter == 10) {
+	        		halfOpacity = false;
+	        		halfOpacityCounter = 0;
+	        	}
+	        }
+	        if(dying == true) {
+	        	dyingAnimation(g2);
+	        }
+			
 			g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null); 
+			
+			//reset opacity
+			changeAlpha(g2, 1f);
 		}
     }
     
-    public BufferedImage setup(String imagePath) {
+    public void dyingAnimation(Graphics2D g2) {
+    	dyingCounter++;
+    	int i = 2;
+    	if(dyingCounter <= i) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i && dyingCounter<= i*2) { changeAlpha(g2, 1f); }
+    	if(dyingCounter > i*2 && dyingCounter<= i*3) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i*3 && dyingCounter<= i*4) { changeAlpha(g2, 1f); }
+    	if(dyingCounter > i*4 && dyingCounter<= i*5) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i*5 && dyingCounter<= i*6) { changeAlpha(g2, 1f); }
+    	if(dyingCounter > i*6 && dyingCounter<= i*7) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i*7 && dyingCounter<= i*8) { changeAlpha(g2, 1f); }
+    	if(dyingCounter > i*8 && dyingCounter<= i*9) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i*9 && dyingCounter<= i*10) { changeAlpha(g2, 1f); }
+    	if(dyingCounter > i*10 && dyingCounter<= i*11) { changeAlpha(g2, 0f); }
+    	if(dyingCounter > i*11) {
+    		dying = false;
+    		alive = false;
+    	}
+    }
+    
+    public void changeAlpha(Graphics2D g2, float alpha) {
+    	g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+    }
+    
+    public BufferedImage setup(String imagePath, int width, int height) {
     	ToolBox uTool = new ToolBox();
     	BufferedImage image = null;
     	try {
     		image = ImageIO.read(getClass().getResourceAsStream(imagePath +".png"));
-    		image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+    		image = uTool.scaleImage(image, width, height);
     	}catch(IOException e) {
     		e.printStackTrace();
     	}

@@ -6,15 +6,18 @@ import entity.Entity;
 import gamePackage.GamePanel;
 
 public class Mob_GreenSlime extends Entity{
+	
+	GamePanel gp;
 
 	public Mob_GreenSlime(GamePanel gp) {
 		super(gp);
+		this.gp = gp;
 		
 		type = 2;
 		name = "Green Slime";
 		speed = 1;
 		
-		maxLife = 3;
+		maxLife = 10;
 		life = maxLife;
 		
 		solidArea.x = 3;
@@ -28,17 +31,17 @@ public class Mob_GreenSlime extends Entity{
 	}
 	
 	public void getImage() {
-		up1 = setup("/monster/greenslime_down_1");
-		up2 = setup("/monster/greenslime_down_2");
-		down1 = setup("/monster/greenslime_down_1");
-		down2 = setup("/monster/greenslime_down_2");
-		left1 = setup("/monster/greenslime_down_1");
-		left2 = setup("/monster/greenslime_down_2");
-		right1 = setup("/monster/greenslime_down_1");
-		right2 = setup("/monster/greenslime_down_2");
+		up1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		up2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		down1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		down2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		left1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		left2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		right1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
+		right2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
 	}
 	
-public void setAction() {
+	public void setAction() {
 		
 		actionLockCounter ++;
 		
@@ -60,6 +63,17 @@ public void setAction() {
 			}
 			
 			actionLockCounter = 0;
+		}
+	}
+	
+	public void damageReaction() {
+		actionLockCounter = 0;
+		
+		switch(gp.player.direction) {
+		case "up": direction = "down"; break;
+		case "down": direction = "up"; break;
+		case "right": direction = "left"; break;
+		case "left": direction = "right"; break;
 		}
 	}
 	
