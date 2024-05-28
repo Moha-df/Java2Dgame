@@ -18,7 +18,7 @@ public class KeyHandler implements KeyListener {
 
         int code = e.getKeyCode();
         
-        if(gp.gameState == gp.titleState) {
+        if(gp.gameState == gp.titleState || gp.gameState == gp.gameOverState) {
         	if(code == KeyEvent.VK_Z) {
         		gp.ui.commandNum--;
         		if(gp.ui.commandNum < 0) {

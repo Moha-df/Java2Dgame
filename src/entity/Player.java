@@ -81,6 +81,9 @@ public class Player extends Entity {
     	// normalement on check les collisions apres etre passer dans le if dans haut puis ensuite on appel quune fois la fonctions
         // qui check les collisions mais ca cancel les diagonal et le jeu est plus agreable avec
         // alors je prefere regarder a chaque mouvement si on peut bouger mais au moins on peut en faire deux en meme temps
+    	if(life <= 0) {
+    		gp.gameState = gp.gameOverState;
+    	}
     	
     	if(attacking == true) {
     		attacking();

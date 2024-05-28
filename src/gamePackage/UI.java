@@ -71,6 +71,9 @@ public class UI {
 			drawPlayerLife();
 			drawDialogueScreen();
 		}
+		if(gp.gameState == gp.gameOverState) {
+			drawOverScreen();
+		}
 	}
 	
 	public void drawPlayerLife() {
@@ -140,6 +143,34 @@ public class UI {
 		y += gp.tileSize;
 		g2.drawString(text, x, y);
 		if(commandNum == 2) {
+			g2.drawString(">", x-gp.tileSize, y);
+		}
+	}
+	
+	public void drawOverScreen() {
+		g2.setColor(new Color(152, 17, 17));
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));
+		String text = "You're dead";
+		int x = getCenteredText(text);
+		int y = gp.tileSize*3;
+		g2.setColor(Color.black);
+		g2.drawString(text, x+3, y+3);
+		g2.setColor(Color.white);
+		g2.drawString(text, x, y);
+		
+		x = gp.screenWidth/2 - gp.tileSize;
+		y += gp.tileSize;
+		g2.drawImage(gp.obj[0].down1, x, y, gp.tileSize*2, gp.tileSize*2, null);
+		
+		
+		text = "QUIT";
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));
+		x = getCenteredText(text);
+		y += gp.tileSize*5;
+		g2.drawString(text, x, y);
+		if(commandNum == 2 || commandNum == 1 || commandNum == 0) {
 			g2.drawString(">", x-gp.tileSize, y);
 		}
 	}

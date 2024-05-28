@@ -5,19 +5,19 @@ import java.util.Random;
 import entity.Entity;
 import gamePackage.GamePanel;
 
-public class Mob_GreenSlime extends Entity{
+public class Mob_RedSlime extends Entity{
 	
 	GamePanel gp;
 
-	public Mob_GreenSlime(GamePanel gp) {
+	public Mob_RedSlime(GamePanel gp) {
 		super(gp);
 		this.gp = gp;
 		
 		type = 2;
-		name = "Green Slime";
+		name = "Red Slime";
 		speed = 1;
 		
-		maxLife = 5;
+		maxLife = 10;
 		life = maxLife;
 		
 		solidArea.x = 3;
@@ -31,14 +31,14 @@ public class Mob_GreenSlime extends Entity{
 	}
 	
 	public void getImage() {
-		up1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
-		up2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
-		down1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
-		down2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
-		left1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
-		left2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
-		right1 = setup("/monster/greenslime_down_1", gp.tileSize, gp.tileSize);
-		right2 = setup("/monster/greenslime_down_2", gp.tileSize, gp.tileSize);
+		up1 = setup("/monster/redslime_down_1", gp.tileSize, gp.tileSize);
+		up2 = setup("/monster/redslime_down_2", gp.tileSize, gp.tileSize);
+		down1 = setup("/monster/redslime_down_1", gp.tileSize, gp.tileSize);
+		down2 = setup("/monster/redslime_down_2", gp.tileSize, gp.tileSize);
+		left1 = setup("/monster/redslime_down_1", gp.tileSize, gp.tileSize);
+		left2 = setup("/monster/redslime_down_2", gp.tileSize, gp.tileSize);
+		right1 = setup("/monster/redslime_down_1", gp.tileSize, gp.tileSize);
+		right2 = setup("/monster/redslime_down_2", gp.tileSize, gp.tileSize);
 	}
 	
 	public void setAction() {
@@ -68,15 +68,12 @@ public class Mob_GreenSlime extends Entity{
 	
 	public void damageReaction() {
 		actionLockCounter = 0;
-		direction = gp.player.direction;
-		/*
 		switch(gp.player.direction) {
 		case "up": direction = "down"; break;
 		case "down": direction = "up"; break;
 		case "right": direction = "left"; break;
 		case "left": direction = "right"; break;
 		}
-		*/
 	}
 	
 }
