@@ -48,12 +48,14 @@ public class EventHandler {
 		}
 		if(canTouchEvent == true) {
 			/*
-			if(hit(0, 27, 16, "right") == true) { damagePit(gp.dialogueState);}
 			if(hit(0, 23, 19, "any") == true) { damagePit(gp.dialogueState);}
 			if(hit(0, 23,12,"up") == true) { healingPool(gp.dialogueState);}
 			*/
-			if(hit(0,13,6, "any") == true) { teleport(1, 13, 17); }
-			if(hit(1, 13, 18, "any") == true) { teleport(0, 13,7); }
+			for(int i =0; i<9; i++) {
+				if(hit(i,13,6, "any") == true) { teleport(i+1, 13, 17); }
+				if(hit(i+1, 13, 18, "any") == true) { teleport(i, 13,7); }
+			}
+			if(hit(0, 13, 12, "any") == true) { damagePit(gp.dialogueState);}
 		}
 	}
 	

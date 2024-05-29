@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Random;
 
 public class GamePanel extends JPanel implements Runnable {
     
@@ -33,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
     // Set FPS
     int FPS = 60;
 
+    
     TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
     Thread gameThread;
@@ -77,6 +79,40 @@ public class GamePanel extends JPanel implements Runnable {
     	aSetter.setObject();
     	aSetter.setNPC();
     	aSetter.setMob();
+    	//Set boost
+    	int tempY;
+    	int tempX;
+    	int tempTile;
+        Random random = new Random();
+        for(int i = 0; i<10; i++) {
+            if(i != 1) {
+	        	if(random.nextInt(100) < 30) {
+	        		tempX = random.nextInt(10)+9;
+	        		tempY = random.nextInt(10)+8;
+	        		tempTile = tileM.mapTileNum[i][tempX][tempY];
+	        		if(tileM.tile[tempTile].collision == false) {
+		    			aSetter.setBurgerBoots(i, tempX, tempY);
+	        		}
+	        	}
+	        	else if(random.nextInt(100) < 60) {
+	        		tempX = random.nextInt(10)+9;
+	        		tempY = random.nextInt(10)+8;
+	        		tempTile = tileM.mapTileNum[i][tempX][tempY];
+	        		if(tileM.tile[tempTile].collision == false) {
+		        		aSetter.setSpeedBoots(i, tempX, tempY);
+	        		}
+	        	}
+	        	else if(random.nextInt(100) < 80) {
+	        		tempX = random.nextInt(10)+9;
+	        		tempY = random.nextInt(10)+8;
+	        		tempTile = tileM.mapTileNum[i][tempX][tempY];
+	        		if(tileM.tile[tempTile].collision == false) {
+	        			aSetter.setPotionBoots(i, tempX, tempY);
+	        		}
+	        	}
+            }
+        }
+        //
     	//playMusic(0);
     	gameState = titleState;
     }

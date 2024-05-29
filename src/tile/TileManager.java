@@ -21,18 +21,47 @@ public class TileManager {
 		this.gp = gp;
 		tile = new Tile[50];
 		mapTileNum = new int[gp.maxMap][gp.maxWorldCol][gp.maxWorldRow];
-		//mapTileNum2 = new int[gp.maxWorldCol][gp.maxWorldRow];
 		getTileImage();
+		
+		// Je garde 2 map non aleatoire pour quelles soit cool au debut
+		// par ce que mon aleatoire nest pas trop trop travailler par manque de temps
 		loadMap("/maps/map01.txt", 0);
 		loadMap("/maps/map02.txt", 1);
-		//loadMap("/maps/map02.txt", mapTileNum2);
+		
+		try { // map generer aleatoirement 
+			GenMap RandomMap1 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap2 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap3 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap4 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap5 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap6 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap7 = new GenMap("/maps/mapSample.txt");
+			GenMap RandomMap8 = new GenMap("/maps/mapSample.txt");
+			
+			mapTileNum[2] = RandomMap1.map;
+			mapTileNum[3] = RandomMap2.map;
+			mapTileNum[4] = RandomMap3.map;
+			mapTileNum[5] = RandomMap4.map;
+			mapTileNum[6] = RandomMap5.map;
+			mapTileNum[7] = RandomMap6.map;
+			mapTileNum[8] = RandomMap7.map;
+			mapTileNum[9] = RandomMap8.map;
+			
+			// pour le moment par ce que bah c le dernier niveau alors je bloque
+			mapTileNum[9][13][7] = 32;
+			mapTileNum[9][14][7] = 32;
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void getTileImage() {
 		for(int i =0; i<10; i++) {
 			setup(i, "00"+i , false);
 		}
-		for(int i=10; i<42; i++) {
+		for(int i=10; i<43; i++) {
 			setup(i, "0"+i , false);
 		}
 		tile[16].collision = true;
@@ -40,6 +69,7 @@ public class TileManager {
 			tile[i].collision = true;
 		}
 		tile[35].collision = true;
+		tile[42].collision = true;
 	}
 	
 	public void setup(int index, String imageName, boolean collision) {

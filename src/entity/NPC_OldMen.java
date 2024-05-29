@@ -34,10 +34,13 @@ public class NPC_OldMen extends Entity{
     }
 	
 	public void setDialogue() {
-		dialogues[0] = "Hello, son of the mage";
-		dialogues[1] = "Your destiny is to collect all \nthe magic power";
-		dialogues[2] = "For that you need to defeat \nall the demon";
-		dialogues[3] = "But they will not give them \nto you alive !!";
+		dialogues[0] = "Bonjour! Dialoguez avec moi\nsi vous voulez en savoir + \nsur le jeu";
+		dialogues[1] = "Les niveaux 1 et 2 \nne sont pas generer aleatoirement";
+		dialogues[2] = "Des bonus apparaissent aleatoirement \nparfois ils peuvent ne pas etre accesible";
+		dialogues[3] = "Faites attentions au slime rouge\nils sont particulierement coriace";
+		dialogues[4] = "Les potions rouges améliore votre attaque\nmais il va falloir etre chanceux\npour en trouver";
+		dialogues[5] = "C'est bizarre que je parle francais\nalors que tout le jeux est en anglais\nnon ?";
+		dialogues[6] = "C'est juste par ce que j'avais\nla flemme de traduire tout ça";
 	}
 	
 	public void setAction() {

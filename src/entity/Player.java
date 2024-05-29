@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 import gamePackage.GamePanel;
 import gamePackage.KeyHandler;
+import gamePackage.ToolBox;
 
 
 public class Player extends Entity {
@@ -47,9 +48,10 @@ public class Player extends Entity {
 
 
     public void setDefaultValues(){
-        worldX = gp.tileSize * 9;
-        worldY = gp.tileSize * 16;
+        worldX = gp.tileSize * 13;
+        worldY = gp.tileSize * 17;
         speed = 2;
+        playerDmg = 1;
         direction = "down";
         maxLife = 6;
         life = 6;
@@ -209,13 +211,38 @@ public class Player extends Entity {
 	    			gp.ui.showMessage("You got a key !");
 	    			break;
 	    		case"Door":
-	    			if(hasKey>0) {
+	    			int numberOfMob = ToolBox.countNonEmptyCells(gp.mob[gp.numMap]);
+	    			if(hasKey>0 && numberOfMob <= 0) {
 	    				gp.obj[gp.numMap][in] = null;
 	    				gp.playSE(3);
 	    				hasKey--;
-	    			}if(hasKey<=0) {
+	    			}else if(hasKey<=0) {
 	    				gp.ui.showMessage("You need a key !");
+	    			}else if(numberOfMob>0){
+	    				gp.ui.showMessage("You need to defeat the last " + numberOfMob + " mob");
 	    			}
+	    			break;
+	    		case"Boots":
+	    			gp.obj[gp.numMap][in] = null;
+	    			gp.playSE(2);
+	    			gp.ui.showMessage("You got a speed boost");
+	    			speed++;
+	    			break;
+	    		case"Burger":
+	    			gp.obj[gp.numMap][in] = null;
+	    			gp.playSE(9);
+	    			if(life<maxLife) {
+	    				gp.ui.showMessage("You got healed");
+	    				life++;
+	    			}else if(life==maxLife) {
+	    				gp.ui.showMessage("You are already full life");
+	    			}
+	    			break;
+	    		case"Potion":
+	    			gp.obj[gp.numMap][in] = null;
+	    			gp.playSE(10);
+    				gp.ui.showMessage("You feel stronger");
+    				playerDmg++;
 	    			break;
     		}
     	}
@@ -251,7 +278,7 @@ public class Player extends Entity {
     	if(index != 999) {
     		if(gp.mob[gp.numMap][index].invicible == false) {
     			gp.playSE(5);
-    			gp.mob[gp.numMap][index].life -= 1;
+    			gp.mob[gp.numMap][index].life -= playerDmg;
     			gp.mob[gp.numMap][index].invicible = true;
     			gp.mob[gp.numMap][index].damageReaction();
     			

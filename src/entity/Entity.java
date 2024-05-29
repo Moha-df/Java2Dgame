@@ -56,6 +56,7 @@ public class Entity  {
 	
     public int maxLife;
     public int life;
+    public int playerDmg;
     
 	int halfOpacityCounter = 0;
 	boolean halfOpacity = false;
